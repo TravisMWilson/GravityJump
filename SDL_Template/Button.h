@@ -24,7 +24,7 @@ public:
 	Button(std::string name, GLTexture* texture);
 	~Button();
 
-	void pressed(Vector2 mousePosition);
+	void pressed();
 
 	void Update() override;
 	void Render() override;

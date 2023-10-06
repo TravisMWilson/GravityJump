@@ -35,10 +35,10 @@ Button::~Button() {
 	mTexture = nullptr;
 }
 
-void Button::pressed(Vector2 mousePosition) {
+void Button::pressed() {
 	mPos = Position() - Vector2(mSize.x / 2, mSize.y /2);
 
-	if (CheckCollision(mousePosition, mPos, mSize)) {
+	if (CheckCollision(mInput->MousePosition(), mPos, mSize)) {
 		mEvents->sendEvent(mName);
 	}
 }
@@ -46,8 +46,7 @@ void Button::pressed(Vector2 mousePosition) {
 void Button::Update() {
 	if (Active()) {
 		if (mInput->MouseButtonPressed(InputManager::MouseButton::Left)) {
-			Vector2 mousePosition = mInput->MousePosition();
-			pressed(mousePosition);
+			pressed();
 		}
 	}
 }

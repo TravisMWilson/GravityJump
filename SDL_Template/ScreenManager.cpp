@@ -21,17 +21,12 @@ void ScreenManager::processEvents() {
 	for (int i = (int)events.size() - 1; i >= 0; i--) {
 		if (events[i] == "Start") {
 			mCurrentScreen = Play;
-			mStartScreen->ResetAnimation();
 			mEvent->removeEvent(i);
-
-			mAudio->PlaySFX("MUS/Chiptune0.wav", 0, 5);
 		}
 	}
 }
 
 void ScreenManager::Update() {
-	mBackgroundStars->Update();
-
 	processEvents();
 
 	switch (mCurrentScreen) {
@@ -48,8 +43,6 @@ void ScreenManager::Update() {
 }
 
 void ScreenManager::Render() {
-	mBackgroundStars->Render();
-
 	switch (mCurrentScreen) {
 	case Start:
 		mStartScreen->Render();
@@ -67,25 +60,19 @@ ScreenManager::ScreenManager() {
 	mEvent = EventManager::Instance();
 	mAudio = AudioManager::Instance();
 
-	mBackgroundStars = BackgroundStars::Instance();
 	mStartScreen = new StartScreen();
 	mPlayScreen = new PlayScreen();
 
 	mCurrentScreen = Start;
 
-	mCursor = new GLTexture("Cursor.png");
+	mCursor = new GLTexture("GravityJump.png", 30, 30, 4, 4);
 	mCursor->Position(Vec2_Zero);
-
-	mAudio->PlaySFX("MUS/GameStart.wav", 0, 4);
 }
 
 ScreenManager::~ScreenManager() {
 	mInput = nullptr;
 	mEvent = nullptr;
 	mAudio = nullptr;
-
-	BackgroundStars::Release();
-	mBackgroundStars = nullptr;
 
 	delete mStartScreen;
 	mStartScreen = nullptr;

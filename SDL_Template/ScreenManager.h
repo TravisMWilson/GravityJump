@@ -1,7 +1,6 @@
 #ifndef __SCREENMANAGER_H
 #define __SCREENMANAGER_H
 
-#include "BackgroundStars.h"
 #include "AudioManager.h"
 #include "InputManager.h"
 #include "EventManager.h"
@@ -20,7 +19,6 @@ private:
 	EventManager* mEvent;
 	AudioManager* mAudio;
 
-	BackgroundStars* mBackgroundStars;
 	StartScreen* mStartScreen;
 	PlayScreen* mPlayScreen;
 

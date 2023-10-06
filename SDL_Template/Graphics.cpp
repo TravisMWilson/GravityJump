@@ -11,7 +11,6 @@ namespace SDLFramework {
 		sMode = mode;
 	}
 
-	// static member functions
 	Graphics* Graphics::Instance() {
 		if (sInstance == nullptr) {
 			switch (sMode) {
@@ -126,7 +125,6 @@ namespace SDLFramework {
 		SDL_RenderPresent(mRenderer);
 	}
 
-	//private member functions
 	Graphics::Graphics() : mRenderer(nullptr) {
 		sInitialized = Init();
 	}
@@ -144,12 +142,12 @@ namespace SDLFramework {
 
 	bool Graphics::Init() {
 		mWindow = SDL_CreateWindow(
-			WINDOW_TITLE,				// window title
-			SDL_WINDOWPOS_UNDEFINED,	// window x pos
-			SDL_WINDOWPOS_UNDEFINED,	// window y pos
-			SCREEN_WIDTH,				// window width
-			SCREEN_HEIGHT,				// window height
-			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS); // | SDL_WINDOW_FULLSCREEN);	// window flags
+			WINDOW_TITLE,
+			SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED,
+			SCREEN_WIDTH,
+			SCREEN_HEIGHT,
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 		if (mWindow == nullptr) {
 			std::cerr << "Unable to create Window! SDL Error: " << SDL_GetError() << std::endl;

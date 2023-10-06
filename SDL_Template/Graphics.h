@@ -21,9 +21,9 @@ namespace SDLFramework {
 			GL
 		};
 
-		static const short SCREEN_WIDTH = 1920;
-		static const short SCREEN_HEIGHT = 1080;
-		const char* WINDOW_TITLE = "Galaga Fleet Clicker";
+		static const short SCREEN_WIDTH = 900;
+		static const short SCREEN_HEIGHT = 900;
+		const char* WINDOW_TITLE = "Gravity Jump";
 
 	protected:
 		static Graphics* sInstance;
