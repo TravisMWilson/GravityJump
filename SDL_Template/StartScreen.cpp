@@ -1,22 +1,26 @@
 #include "StartScreen.h"
 
 StartScreen::StartScreen() {
-	mAnimatedLogo = new AnimatedGLTexture("GravityJump.png", 0, 0, 700, 900, 15, 1.2f, Animation::Layouts::Horizontal);
+	mAnimatedLogo = new AnimatedGLTexture("GravityJumpLogo.png", 0, 0, 615, 282, 25, 2.0f, Animation::Layouts::Horizontal);
 	mAnimatedLogo->Parent(this);
-	mAnimatedLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f);
+	mAnimatedLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.3f);
 
-	mStart = new Button("Start", new GLTexture("START", "galagafont.ttf", 80, { 230, 230, 230 }));
+	mLogoBackground = new GLTexture("GravityJumpLogoBackground.png");
+	mLogoBackground->Parent(this);
+	mLogoBackground->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.3f);
+
+	mStart = new Button("Start", new GLTexture("START", "AovelSansRounded-rdDL.ttf", 48, { 30, 30, 30 }));
 	mStart->Parent(this);
 	mStart->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f + 35.0f);
 
 	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
 	mBottomBar->Parent(this);
 
-	mNamco = new GLTexture("travis wilson", "galagafont.ttf", 36, { 200, 0, 0 });
+	mNamco = new GLTexture("Travis Wilson", "Copenhagen-z3Z0.ttf", 60, { 66, 109, 107 });
 	mNamco->Parent(mBottomBar);
 	mNamco->Position(Vec2_Zero);
 
-	mDates = new GLTexture("2023 PURPLE STUDIOS", "galagafont.ttf", 80, { 230, 230, 230 });
+	mDates = new GLTexture("2023 PURPLE STUDIOS", "AovelSansRounded-rdDL.ttf", 48, { 30, 30, 30 });
 	mDates->Parent(mBottomBar);
 	mDates->Position(0.0f, 90.0f);
 }
@@ -24,6 +28,8 @@ StartScreen::StartScreen() {
 StartScreen::~StartScreen() {
 	delete mAnimatedLogo;
 	mAnimatedLogo = nullptr;
+	delete mLogoBackground;
+	mLogoBackground = nullptr;
 
 	delete mStart;
 	mStart = nullptr;
@@ -42,6 +48,7 @@ void StartScreen::Update() {
 }
 
 void StartScreen::Render() {
+	mLogoBackground->Render();
 	mAnimatedLogo->Render();
 	mStart->Render();
 	mNamco->Render();

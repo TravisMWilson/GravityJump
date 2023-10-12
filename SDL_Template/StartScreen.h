@@ -11,13 +11,14 @@ using namespace SDLFramework;
 class StartScreen : public GameEntity {
 
 private:
-	AnimatedGLTexture * mAnimatedLogo;
+	AnimatedGLTexture* mAnimatedLogo;
 
-	Button * mStart;
+	Button* mStart;
 
-	GameEntity * mBottomBar;
-	Texture * mNamco;
-	Texture * mDates;
+	GameEntity* mBottomBar;
+	GLTexture* mLogoBackground;
+	GLTexture* mNamco;
+	GLTexture* mDates;
 
 public:
 	StartScreen();

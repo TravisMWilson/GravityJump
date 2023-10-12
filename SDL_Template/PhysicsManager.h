@@ -1,24 +1,23 @@
 #ifndef __PHYSICSMANAGER_H
 #define __PHYSICSMANAGER_H
+
 #include <bitset>
 #include "PhysEntity.h"
 
 class PhysicsManager {
 public:
 	enum class CollisionLayers {
-		Friendly,
-		FriendlyProjectiles,
-		Hostile,
-		HostileProjectiles,
+		Player,
+		Platform,
+		Explosion,
 		MaxLayers
 	};
-
+	
 	enum class CollisionFlags {
 		None				= 0x00,
-		Friendly			= 0x01,
-		FriendlyProjectiles = 0x02,
-		Hostile				= 0x04,
-		HostileProjectiles	= 0x08
+		Player				= 0x01,
+		Platform			= 0x02,
+		Explosion			= 0x04
 	};
 
 private:

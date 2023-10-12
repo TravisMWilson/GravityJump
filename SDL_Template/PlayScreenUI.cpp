@@ -8,11 +8,11 @@ PlayScreenUI::PlayScreenUI() {
 
 	mDisplayLevel = new Scoreboard({ 255, 216, 0 });
 	mDisplayLevel->Parent(mDisplay);
-	mDisplayLevel->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f + 100.0f, 26.0f));
+	mDisplayLevel->Position(Vector2(Graphics::SCREEN_WIDTH - 20.0f, 25.0f));
 
 	mDisplayScore = new Scoreboard({ 255, 0, 0 });
 	mDisplayScore->Parent(mDisplay);
-	mDisplayScore->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, 70.0f));
+	mDisplayScore->Position(Vector2(Graphics::SCREEN_WIDTH - 20.0f, 50.0f));
 }
 
 PlayScreenUI::~PlayScreenUI() {

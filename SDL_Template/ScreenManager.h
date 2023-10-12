@@ -23,11 +23,13 @@ private:
 	PlayScreen* mPlayScreen;
 
 	GLTexture* mCursor;
+	GLTexture* mBackground;
 
 public:
 	static ScreenManager * Instance();
 	static void Release();
 
+	void moveBackground();
 	void processEvents();
 
 	void Update();

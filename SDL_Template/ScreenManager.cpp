@@ -21,12 +21,22 @@ void ScreenManager::processEvents() {
 	for (int i = (int)events.size() - 1; i >= 0; i--) {
 		if (events[i] == "Start") {
 			mCurrentScreen = Play;
+			mEvent->sendEvent("ActivatePlayer");
 			mEvent->removeEvent(i);
 		}
 	}
 }
 
+void ScreenManager::moveBackground() {
+	mBackground->Translate(Vector2(-1.0f, 0.0f));
+
+	if (mBackground->Position().x + (mBackground->ScaledDimensions().x / 2) <= Graphics::SCREEN_WIDTH) {
+		mBackground->Position(Vector2(((mBackground->ScaledDimensions().x / 2)) - 900, Graphics::SCREEN_HEIGHT / 2));
+	}
+}
+
 void ScreenManager::Update() {
+	moveBackground();
 	processEvents();
 
 	switch (mCurrentScreen) {
@@ -43,6 +53,8 @@ void ScreenManager::Update() {
 }
 
 void ScreenManager::Render() {
+	mBackground->Render();
+
 	switch (mCurrentScreen) {
 	case Start:
 		mStartScreen->Render();
@@ -67,6 +79,9 @@ ScreenManager::ScreenManager() {
 
 	mCursor = new GLTexture("GravityJump.png", 30, 30, 4, 4);
 	mCursor->Position(Vec2_Zero);
+
+	mBackground = new GLTexture("Background.png");
+	mBackground->Position(Vector2(0.0f, Graphics::SCREEN_HEIGHT / 2));
 }
 
 ScreenManager::~ScreenManager() {
@@ -82,4 +97,7 @@ ScreenManager::~ScreenManager() {
 
 	delete mCursor;
 	mCursor = nullptr;
+
+	delete mBackground;
+	mBackground = nullptr;
 }
