@@ -25,21 +25,21 @@ void Scoreboard::Score(std::string str, int placement) {
 	unsigned lastIndex = (unsigned)str.length() - 1;
 
 	for (unsigned i = 0; i <= lastIndex; i++) {
-		mScore.push_back(new GLTexture(str.substr(i, 1), "galagafont.ttf", 40, mColor));
+		mScore.push_back(new GLTexture(str.substr(i, 1), "AovelSansRounded-rdDL.ttf", 40, mColor));
 		mScore[i]->Parent(this);
 
 		if (placement == ScorePlacement::LEFT) {
-			mScore[i]->Position(Vector2(20.0f * (lastIndex - (lastIndex - i)), 0.0f));
+			mScore[i]->Position(Vector2(23.0f * (lastIndex - (lastIndex - i)), 0.0f));
 		}
 		else if (placement == ScorePlacement::CENTER) {
-			mScore[i]->Position(Vector2(-20.0f * (((lastIndex / 2.0f) - 0.5f) - i), 0.0f));
+			mScore[i]->Position(Vector2(-23.0f * (((lastIndex / 2.0f) - 0.5f) - i), 0.0f));
 		}
 		else if (placement == ScorePlacement::RIGHT) {
-			mScore[i]->Position(Vector2(-20.0f * (lastIndex - i), 0.0f));
+			mScore[i]->Position(Vector2(-23.0f * (lastIndex - i), 0.0f));
 		}
 	}
 
-	mSize = Vector2(20.0f * (lastIndex + 1), 20.0f);
+	mSize = Vector2(20.0f * (lastIndex + 1), 23.0f);
 }
 
 Vector2 Scoreboard::Size() {

@@ -56,6 +56,7 @@ namespace SDLFramework {
 	void AnimatedGLTexture::ResetAnimation() {
 		mAnim.frameTimer = 0.0f;
 		mAnim.done = false;
+		mTimer->Reset();
 	}
 
 	bool AnimatedGLTexture::IsAnimating() {

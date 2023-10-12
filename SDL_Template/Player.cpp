@@ -30,21 +30,31 @@ Player::Player() {
 	mInput = InputManager::Instance();
 	mTimer = new Timer();
 
-	mTexture = new GLTexture("GravityJump.png", 1, 1064, 54, 90);
+	mStaticTextures.push_back(new SDL_Rect({ 474, 0, 79, 102 }));
+	mStaticTextures.push_back(new SDL_Rect({ 553, 0, 79, 102 }));
+	mStaticTextures.push_back(new SDL_Rect({ 632, 0, 79, 102 }));
+
+	mTexture = new GLTexture("GravityJump.png", 632, 0, 79, 102);
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
+
+	mRunAnimation = new AnimatedGLTexture("GravityJump.png", 0, 0, 79, 102, 6, 0.5f, Animation::Layouts::Horizontal);
+	mRunAnimation->Parent(this);
+	mRunAnimation->Position(Vec2_Zero);
+	mRunAnimation->Active(false);
 
 	mGravity = DOWN;
 
 	mCanSwitchGravity = true;
-	mJumpingTimer = 0;
+	mJumped = false;
+	mCanJump = true;
 	mGravityTimer = 0;
-	mLevel = 1;
+	mHiScore = 1;
 	mScore = 0;
 
 	loadData();
 
-	AddCollider(new BoxCollider(Vector2(40.0f, 80.0f)));
+	AddCollider(new BoxCollider(Vector2(40.0f, 90.0f)));
 
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Player);
 }
@@ -62,65 +72,163 @@ Player::~Player() {
 	PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
+void Player::resetPlayer() {
+	Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f);
+	Rotation(0.0f);
+	Active(false);
+
+	mJumped = false;
+	mCanJump = true;
+
+	mGravity = DOWN;
+	mGravityTimer = 0;
+	mRotationalGoal = 0.0f;
+	mCanSwitchGravity = true;
+
+	mScore = 0;
+
+	mRunAnimation->Active(false);
+	mTexture->SetSourceRect(mStaticTextures[STATIC]);
+}
+
 void Player::move() {
 	if (Rotation() == mRotationalGoal) {
 		if (mInput->KeyDown(SDL_SCANCODE_W)) {
-			if (mGravity == Player::DOWN) {
+			if (mGravity == Player::DOWN && !mJumped) {
 				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
+				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
+				mRunAnimation->Active(false);
+				mCanJump = false;
 			}
 			else if (mGravity == Player::LEFT) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
 				mTexture->Scale(Vector2(-1.0f, 1.0f));
 				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 			else if (mGravity == Player::RIGHT) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
 				mTexture->Scale(Vector2(1.0f, 1.0f));
 				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_S)) {
-			if (mGravity == Player::UP) {
+			if (mGravity == Player::UP && !mJumped) {
 				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
+				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
+				mRunAnimation->Active(false);
+				mCanJump = false;
 			}
 			else if (mGravity == Player::LEFT) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
 				mTexture->Scale(Vector2(1.0f, 1.0f));
 				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 			else if (mGravity == Player::RIGHT) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
 				mTexture->Scale(Vector2(-1.0f, 1.0f));
 				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_A)) {
-			if (mGravity == Player::RIGHT) {
+			if (mGravity == Player::RIGHT && !mJumped) {
 				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
+				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
+				mRunAnimation->Active(false);
+				mCanJump = false;
 			}
 			else if (mGravity == Player::DOWN) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
 				mTexture->Scale(Vector2(-1.0f, 1.0f));
 				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 			else if (mGravity == Player::UP) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
 				mTexture->Scale(Vector2(1.0f, 1.0f));
 				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_D)) {
-			if (mGravity == Player::LEFT) {
+			if (mGravity == Player::LEFT && !mJumped) {
 				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
+				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
+				mRunAnimation->Active(false);
+				mCanJump = false;
 			}
 			else if (mGravity == Player::DOWN) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
 				mTexture->Scale(Vector2(1.0f, 1.0f));
 				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 			else if (mGravity == Player::UP) {
+				if (mCanJump) {
+					mRunAnimation->Active(true);
+				}
+
+				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
 				mTexture->Scale(Vector2(-1.0f, 1.0f));
 				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
 			}
 		}
 
+		if ((mInput->KeyReleased(SDL_SCANCODE_W) && mGravity == Player::DOWN)
+			|| (mInput->KeyReleased(SDL_SCANCODE_S) && mGravity == Player::UP)
+			|| (mInput->KeyReleased(SDL_SCANCODE_A) && mGravity == Player::RIGHT)
+			|| (mInput->KeyReleased(SDL_SCANCODE_D) && mGravity == Player::LEFT)) {
+			if (!mCanJump) {
+				mJumped = true;
+				mTexture->SetSourceRect(mStaticTextures[FALLING]);
+			}
+		}
+
+		if ((mInput->KeyReleased(SDL_SCANCODE_W) && (mGravity == Player::LEFT || mGravity == Player::RIGHT))
+			|| (mInput->KeyReleased(SDL_SCANCODE_S) && (mGravity == Player::LEFT || mGravity == Player::RIGHT))
+			|| (mInput->KeyReleased(SDL_SCANCODE_A) && (mGravity == Player::UP || mGravity == Player::DOWN))
+			|| (mInput->KeyReleased(SDL_SCANCODE_D) && (mGravity == Player::UP || mGravity == Player::DOWN))) {
+			if (mRunAnimation->Active()) {
+				mRunAnimation->Active(false);
+				mTexture->SetSourceRect(mStaticTextures[STATIC]);
+			}
+		}
+
 		Translate(-Vec2_Up * 500.0f * mTimer->DeltaTime());
+	}
+
+	if (Position().y + (mTexture->ScaledDimensions().y / 2) < 0.0f
+		|| Position().y - (mTexture->ScaledDimensions().y / 2) > Graphics::SCREEN_HEIGHT
+		|| Position().x - (mTexture->ScaledDimensions().x / 2) < 0.0f
+		|| Position().x - (mTexture->ScaledDimensions().x / 2) > Graphics::SCREEN_WIDTH) {
+		Active(false);
 	}
 }
 
@@ -139,6 +247,8 @@ void Player::changeGravity() {
 
 	if (mGravityTimer <= 0.0f && mCanSwitchGravity) {
 		if (mInput->KeyDown(SDL_SCANCODE_UP)) {
+			mTexture->SetSourceRect(mStaticTextures[FALLING]);
+			mRunAnimation->Active(false);
 			mGravity = UP;
 			mRotationalGoal = 180.0f;
 			mGravityTimer = 0.75f;
@@ -146,6 +256,8 @@ void Player::changeGravity() {
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_DOWN)) {
+			mTexture->SetSourceRect(mStaticTextures[FALLING]);
+			mRunAnimation->Active(false);
 			mGravity = DOWN;
 			mRotationalGoal = 0.0f;
 			mGravityTimer = 0.75f;
@@ -153,6 +265,8 @@ void Player::changeGravity() {
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_LEFT)) {
+			mTexture->SetSourceRect(mStaticTextures[FALLING]);
+			mRunAnimation->Active(false);
 			mGravity = LEFT;
 			mRotationalGoal = 90.0f;
 			mGravityTimer = 0.75f;
@@ -160,6 +274,8 @@ void Player::changeGravity() {
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
+			mTexture->SetSourceRect(mStaticTextures[FALLING]);
+			mRunAnimation->Active(false);
 			mGravity = RIGHT;
 			mRotationalGoal = 270.0f;
 			mGravityTimer = 0.75f;
@@ -184,12 +300,12 @@ void Player::score(int amount) {
 	mScore += amount;
 }
 
-int Player::level() {
-	return mLevel;
+int Player::hiScore() {
+	return mHiScore;
 }
 
-void Player::level(int level) {
-	mLevel += level;
+void Player::hiScore(int level) {
+	mHiScore = level;
 	saveData();
 }
 
@@ -197,25 +313,37 @@ void Player::Hit(PhysEntity* other) {
 	if (other->tag() == "Up") {
 		if (mGravity == Player::UP && Position().y - (mTexture->ScaledDimensions().y / 2) >= (other->Position().y - 40.0f)) {
 			Position(Position() - Vector2(0.0f, (Position().y - (mTexture->ScaledDimensions().y / 2)) - (other->Position().y + 10.0f)));
+			mTexture->SetSourceRect(mStaticTextures[STATIC]);
 			mCanSwitchGravity = true;
+			mJumped = false;
+			mCanJump = true;
 		}
 	}
 	else if (other->tag() == "Down") {
 		if (mGravity == Player::DOWN && Position().y + (mTexture->ScaledDimensions().y / 2) <= (other->Position().y + 40.0f)) {
 			Position(Position() - Vector2(0.0f, (Position().y + (mTexture->ScaledDimensions().y / 2)) - (other->Position().y - 10.0f)));
+			mTexture->SetSourceRect(mStaticTextures[STATIC]);
 			mCanSwitchGravity = true;
+			mJumped = false;
+			mCanJump = true;
 		}
 	}
 	else if (other->tag() == "Left") {
 		if (mGravity == Player::LEFT && Position().x - (mTexture->ScaledDimensions().y / 2) >= (other->Position().x - 40.0f)) {
 			Position(Position() - Vector2((Position().x - (mTexture->ScaledDimensions().y / 2)) - (other->Position().x + 10.0f), 0.0f));
+			mTexture->SetSourceRect(mStaticTextures[STATIC]);
 			mCanSwitchGravity = true;
+			mJumped = false;
+			mCanJump = true;
 		}
 	}
 	else if (other->tag() == "Right") {
 		if (mGravity == Player::RIGHT && Position().x + (mTexture->ScaledDimensions().y / 2) <= (other->Position().x + 40.0f)) {
 			Position(Position() - Vector2((Position().x + (mTexture->ScaledDimensions().y / 2)) - (other->Position().x - 10.0f), 0.0f));
+			mTexture->SetSourceRect(mStaticTextures[STATIC]);
 			mCanSwitchGravity = true;
+			mJumped = false;
+			mCanJump = true;
 		}
 	}
 }
@@ -241,10 +369,7 @@ void Player::loadData() {
 
 		while (std::getline(inputFile, line)) {
 			if (lineIndex == 0) {
-				mLevel = stoi(line);
-			}
-			else if (lineIndex == 1) {
-				mScore = stoi(line);
+				mHiScore = stoi(line);
 			}
 
 			lineIndex++;
@@ -258,8 +383,7 @@ void Player::saveData() {
 	std::ofstream outputFile("data.txt", std::ios::trunc);
 
 	if (outputFile.is_open()) {
-		outputFile << mLevel << std::endl;
-		outputFile << mScore << std::endl;
+		outputFile << mHiScore << std::endl;
 
 		outputFile.close();
 	}
@@ -269,6 +393,8 @@ void Player::Update() {
 	mTimer->Update();
 
 	if (Active()) {
+		mRunAnimation->Update();
+
 		move();
 		changeGravity();
 	}
@@ -279,5 +405,12 @@ void Player::Update() {
 }
 
 void Player::Render() {
-	mTexture->Render();
+	if (Active()) {
+		if (mRunAnimation->Active()) {
+			mRunAnimation->Render();
+		}
+		else {
+			mTexture->Render();
+		}
+	}
 }

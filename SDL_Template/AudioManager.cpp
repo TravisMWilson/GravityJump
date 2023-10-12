@@ -60,7 +60,7 @@ namespace SDLFramework {
 			std::cerr << "Unable to initialize audio! Mix Error: " << Mix_GetError() << std::endl;
 		}
 
-		SetVolume(60, 1);
+		SetVolume(40, 1);
 	}
 
 	AudioManager::~AudioManager() {

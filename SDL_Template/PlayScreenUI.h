@@ -16,7 +16,7 @@ private:
 	Player* mPlayer;
 
 	GameEntity* mDisplay;
-	Scoreboard* mDisplayLevel;
+	Scoreboard* mDisplayHiScore;
 	Scoreboard* mDisplayScore;
 
 public:

@@ -24,6 +24,12 @@ void ScreenManager::processEvents() {
 			mEvent->sendEvent("ActivatePlayer");
 			mEvent->removeEvent(i);
 		}
+		else if (events[i] == "GameOver") {
+			mCurrentScreen = Start;
+			delete mPlayScreen;
+			mPlayScreen = new PlayScreen();
+			mEvent->removeEvent(i);
+		}
 	}
 }
 
@@ -36,8 +42,20 @@ void ScreenManager::moveBackground() {
 }
 
 void ScreenManager::Update() {
+	mTimer->Update();
+
 	moveBackground();
 	processEvents();
+
+	if (mTimer->TotalTime() > 85.0f) {
+		mMusicSelection++;
+		mAudio->PlaySFX("MUS/BackgroundMusic" + std::to_string(mMusicSelection) + ".wav", 0, 1);
+		mTimer->Reset();
+
+		if (mMusicSelection >= 9) {
+			mMusicSelection = -1;
+		}
+	}
 
 	switch (mCurrentScreen) {
 	case Start:
@@ -50,6 +68,10 @@ void ScreenManager::Update() {
 
 	Vector2 mousePosition = mInput->MousePosition();
 	mCursor->Position(mousePosition);
+
+
+
+	mTimer->Reset();
 }
 
 void ScreenManager::Render() {
@@ -77,11 +99,15 @@ ScreenManager::ScreenManager() {
 
 	mCurrentScreen = Start;
 
-	mCursor = new GLTexture("GravityJump.png", 30, 30, 4, 4);
+	mCursor = new GLTexture("GravityJump.png", 1, 144, 4, 4);
 	mCursor->Position(Vec2_Zero);
 
 	mBackground = new GLTexture("Background.png");
 	mBackground->Position(Vector2(0.0f, Graphics::SCREEN_HEIGHT / 2));
+
+	mMusicSelection = 0;
+
+	mAudio->PlaySFX("MUS/BackgroundMusic1.wav", 0, 1);
 }
 
 ScreenManager::~ScreenManager() {

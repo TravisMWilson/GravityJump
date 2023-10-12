@@ -6,13 +6,13 @@ PlayScreenUI::PlayScreenUI() {
 	mDisplay = new GameEntity();
 	mDisplay->Position(Vector2(Vec2_Zero));
 
-	mDisplayLevel = new Scoreboard({ 255, 216, 0 });
-	mDisplayLevel->Parent(mDisplay);
-	mDisplayLevel->Position(Vector2(Graphics::SCREEN_WIDTH - 20.0f, 25.0f));
+	mDisplayHiScore = new Scoreboard({ 255, 216, 0 });
+	mDisplayHiScore->Parent(mDisplay);
+	mDisplayHiScore->Position(Vector2(Graphics::SCREEN_WIDTH - 20.0f, 25.0f));
 
 	mDisplayScore = new Scoreboard({ 255, 0, 0 });
 	mDisplayScore->Parent(mDisplay);
-	mDisplayScore->Position(Vector2(Graphics::SCREEN_WIDTH - 20.0f, 50.0f));
+	mDisplayScore->Position(Vector2(Graphics::SCREEN_WIDTH - 20.0f, 60.0f));
 }
 
 PlayScreenUI::~PlayScreenUI() {
@@ -20,18 +20,18 @@ PlayScreenUI::~PlayScreenUI() {
 
 	delete mDisplay;
 	mDisplay = nullptr;
-	delete mDisplayLevel;
-	mDisplayLevel = nullptr;
+	delete mDisplayHiScore;
+	mDisplayHiScore = nullptr;
 	delete mDisplayScore;
 	mDisplayScore = nullptr;
 }
 
 void PlayScreenUI::Update() {
-	mDisplayLevel->Score(mPlayer->level());
+	mDisplayHiScore->Score(mPlayer->hiScore());
 	mDisplayScore->Score(mPlayer->score());
 }
 
 void PlayScreenUI::Render() {
-	mDisplayLevel->Render();
+	mDisplayHiScore->Render();
 	mDisplayScore->Render();
 }

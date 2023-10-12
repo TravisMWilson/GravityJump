@@ -3,6 +3,9 @@
 
 #include <vector>
 
+#include "AnimatedGLTexture.h"
+#include "EventManager.h"
+#include "InputManager.h"
 #include "AudioManager.h"
 #include "PlayScreenUI.h"
 #include "GameEntity.h"
@@ -13,7 +16,7 @@
 
 class PlayScreen : public GameEntity {
 private:
-	AudioManager* mAudio;
+	EventManager* mEvent;
 	InputManager* mInput;
 	Random* mRand;
 	Timer* mTimer;
@@ -23,7 +26,8 @@ private:
 
 	std::vector<Platform*> mPlatforms;
 
-	int mMusicSelection;
+	AnimatedGLTexture* mTarget;
+	AnimatedGLTexture* mExplosion;
 
 public:
 	PlayScreen();

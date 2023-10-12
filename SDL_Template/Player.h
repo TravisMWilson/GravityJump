@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "AnimatedGLTexture.h"
 #include "InputManager.h"
 #include "EventManager.h"
 #include "PhysEntity.h"
@@ -14,6 +15,7 @@ using namespace SDLFramework;
 class Player : public PhysEntity {
 public:
 	enum GravityDirection { UP, DOWN, LEFT, RIGHT };
+	enum TextureState { JUMPING, STATIC, FALLING };
 
 private:
 	static Player* sInstance;
@@ -22,16 +24,21 @@ private:
 	InputManager* mInput;
 	Timer* mTimer;
 
-	GLTexture* mTexture;
+	std::vector<SDL_Rect*> mStaticTextures;
 
-	bool mJumping;
-	float mJumpingTimer;
+	GLTexture* mTexture;
+	AnimatedGLTexture* mRunAnimation;
+
+	bool mJumped;
+	bool mCanJump;
+
 	int mGravity;
 	float mGravityTimer;
 	float mRotationalGoal;
 	bool mCanSwitchGravity;
+
 	int mScore;
-	int mLevel;
+	int mHiScore;
 
 	bool IgnoreCollisions() override;
 
@@ -42,6 +49,8 @@ public:
 	Player();
 	~Player();
 
+	void resetPlayer();
+
 	void move();
 
 	void changeGravity();
@@ -50,8 +59,8 @@ public:
 
 	int score();
 	void score(int value);
-	int level();
-	void level(int value);
+	int hiScore();
+	void hiScore(int value);
 
 	void Hit(PhysEntity* other) override;
 

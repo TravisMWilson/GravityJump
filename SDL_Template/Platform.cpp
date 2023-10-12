@@ -8,12 +8,21 @@ bool Platform::IgnoreCollisions() {
 
 Platform::Platform() {
 	mRand = Random::Instance();
+	mTimer = new Timer();
 
-	mTexture = new GLTexture("GravityJump.png", 1, 1159, 192, 40);
+	mTexture = new GLTexture("GravityJump.png", 1, 214, 192, 40);
+	mTexture->Scale(Vector2(mRand->RandomRange(0.8f, 1.2f), mRand->RandomRange(0.8f, 1.2f)));
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
 
+	mBreakupTexture = new AnimatedGLTexture("GravityJump.png", 194, 124, 233, 131, 4, 0.5f, Animation::Layouts::Horizontal);
+	mBreakupTexture->Parent(this);
+	mBreakupTexture->SetWrapMode(Animation::WrapModes::Once);
+	mBreakupTexture->Position(Vec2_Zero);
+
 	mTag = "Platform";
+	mBreaking = false;
+	mSpeed = mRand->RandomRange(50.0f, 150.0f);
 
 	AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
 
@@ -24,6 +33,7 @@ Platform::Platform() {
 
 Platform::~Platform() {
 	mRand = nullptr;
+	mTimer = nullptr;
 
 	delete mTexture;
 	mTexture = nullptr;
@@ -68,14 +78,43 @@ void Platform::checkPlatformPosition() {
 	}
 }
 
+void Platform::breakPlatform() {
+	mBreakupTexture->ResetAnimation();
+	mBreaking = true;
+}
+
+bool Platform::isBreaking() {
+	return mBreaking;
+}
+
 void Platform::Hit(PhysEntity* other) {
 	
 }
 
 void Platform::Update() {
+	mTimer->Update();
+
 	checkPlatformPosition();
+
+	if (mBreaking) {
+		mBreakupTexture->Update();
+
+		if (!mBreakupTexture->IsAnimating()) {
+			Active(false);
+		}
+	}
+	else {
+		Translate(Vec2_Up * mSpeed * mTimer->DeltaTime());
+	}
+
+	mTimer->Reset();
 }
 
 void Platform::Render() {
-	mTexture->Render();
+	if (mBreaking) {
+		mBreakupTexture->Render();
+	}
+	else {
+		mTexture->Render();
+	}
 }

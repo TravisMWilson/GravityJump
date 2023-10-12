@@ -15,6 +15,7 @@ private:
 	enum Screens { Start, Play };
 	Screens mCurrentScreen;
 
+	Timer* mTimer;
 	InputManager* mInput;
 	EventManager* mEvent;
 	AudioManager* mAudio;
@@ -24,6 +25,8 @@ private:
 
 	GLTexture* mCursor;
 	GLTexture* mBackground;
+
+	int mMusicSelection;
 
 public:
 	static ScreenManager * Instance();
