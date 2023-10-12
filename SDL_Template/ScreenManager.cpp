@@ -69,8 +69,6 @@ void ScreenManager::Update() {
 	Vector2 mousePosition = mInput->MousePosition();
 	mCursor->Position(mousePosition);
 
-
-
 	mTimer->Reset();
 }
 
@@ -93,6 +91,7 @@ ScreenManager::ScreenManager() {
 	mInput = InputManager::Instance();
 	mEvent = EventManager::Instance();
 	mAudio = AudioManager::Instance();
+	mTimer = new Timer();
 
 	mStartScreen = new StartScreen();
 	mPlayScreen = new PlayScreen();
