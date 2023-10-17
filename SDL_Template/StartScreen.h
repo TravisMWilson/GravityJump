@@ -2,18 +2,17 @@
 #define __STARTSCREEN_H
 
 #include "AnimatedGLTexture.h"
-#include "InputManager.h"
-#include "Scoreboard.h"
+#include "GameEntity.h"
 #include "Button.h"
 
 using namespace SDLFramework;
 
 class StartScreen : public GameEntity {
-
 private:
 	AnimatedGLTexture* mAnimatedLogo;
 
 	Button* mStart;
+	Button* mTutorial;
 
 	GameEntity* mBottomBar;
 	GLTexture* mLogoBackground;

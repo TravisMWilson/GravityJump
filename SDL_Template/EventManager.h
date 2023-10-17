@@ -17,6 +17,7 @@ namespace SDLFramework {
 
 		void sendEvent(std::string eventName);
 		void removeEvent(int index);
+		void clearEvents();
 		std::vector<std::string> getEvents();
 
 	private:

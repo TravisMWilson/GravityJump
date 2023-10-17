@@ -10,14 +10,18 @@ public:
 		Player,
 		Platform,
 		Explosion,
+		Bird,
+		Spike,
 		MaxLayers
 	};
 	
 	enum class CollisionFlags {
-		None				= 0x00,
-		Player				= 0x01,
-		Platform			= 0x02,
-		Explosion			= 0x04
+		None		= 0x00,
+		Player		= 0x01,
+		Platform	= 0x02,
+		Explosion	= 0x04,
+		Bird		= 0x08,
+		Spike		= 0x10
 	};
 
 private:

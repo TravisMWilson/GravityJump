@@ -38,7 +38,7 @@ Player::Player() {
 	mTexture->Parent(this);
 	mTexture->Position(Vec2_Zero);
 
-	mRunAnimation = new AnimatedGLTexture("GravityJump.png", 0, 0, 79, 102, 6, 0.5f, Animation::Layouts::Horizontal);
+	mRunAnimation = new AnimatedGLTexture("GravityJump.png", 0, 0, 79, 102, 6, 0.5f);
 	mRunAnimation->Parent(this);
 	mRunAnimation->Position(Vec2_Zero);
 	mRunAnimation->Active(false);
@@ -68,6 +68,16 @@ Player::~Player() {
 
 	delete mTexture;
 	mTexture = nullptr;
+
+	delete mRunAnimation;
+	mRunAnimation = nullptr;
+
+	for (auto* texture : mStaticTextures) {
+		delete texture;
+		texture = nullptr;
+	}
+
+	mStaticTextures.clear();
 
 	PhysicsManager::Instance()->UnregisterEntity(mId);
 }
@@ -224,10 +234,10 @@ void Player::move() {
 		Translate(-Vec2_Up * 500.0f * mTimer->DeltaTime());
 	}
 
-	if (Position().y + (mTexture->ScaledDimensions().y / 2) < 0.0f
-		|| Position().y - (mTexture->ScaledDimensions().y / 2) > Graphics::SCREEN_HEIGHT
-		|| Position().x - (mTexture->ScaledDimensions().x / 2) < 0.0f
-		|| Position().x - (mTexture->ScaledDimensions().x / 2) > Graphics::SCREEN_WIDTH) {
+	if (Position().y < 0.0f - std::abs(mTexture->ScaledDimensions().y / 2)
+		|| Position().y > Graphics::SCREEN_HEIGHT + std::abs(mTexture->ScaledDimensions().y / 2)
+		|| Position().x < 0.0f - std::abs(mTexture->ScaledDimensions().x / 2)
+		|| Position().x > Graphics::SCREEN_WIDTH + std::abs(mTexture->ScaledDimensions().x / 2)) {
 		Active(false);
 	}
 }
@@ -346,6 +356,9 @@ void Player::Hit(PhysEntity* other) {
 			mCanJump = true;
 		}
 	}
+	else if (other->tag() == "Spike") {
+		mEvent->sendEvent("GameOver");
+	}
 }
 
 void Player::processEvents() {
@@ -413,4 +426,6 @@ void Player::Render() {
 			mTexture->Render();
 		}
 	}
+
+	PhysEntity::Render();
 }

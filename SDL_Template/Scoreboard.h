@@ -2,6 +2,7 @@
 #define __SCOREBOARD_H
 
 #include <vector>
+#include <string>
 
 #include "GameEntity.h"
 #include "GLTexture.h"
@@ -13,7 +14,11 @@ public:
 	enum ScorePlacement { LEFT, CENTER, RIGHT };
 
 private:
+	const int FONT_SIZE = 40;
+	const float FONT_SPACING = 23.0f;
+
 	std::vector<GLTexture*> mScore;
+	std::string mCurrentScore;
 	int mScoreValue;
 	SDL_Color mColor;
 	Vector2 mSize;
@@ -25,6 +30,7 @@ public:
 
 	void Score(int score, int placement = ScorePlacement::RIGHT);
 	void Score(std::string str, int placement = ScorePlacement::RIGHT);
+	std::string Score();
 
 	Vector2 Size();
 

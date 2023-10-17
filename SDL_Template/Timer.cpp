@@ -15,6 +15,12 @@ void Timer::Reset() {
 	mStartTime = std::chrono::high_resolution_clock::now();
 }
 
+void Timer::CompleteReset() {
+	mStartTime = std::chrono::high_resolution_clock::now();
+	Update();
+	mStartTime = std::chrono::high_resolution_clock::now();
+}
+
 float Timer::DeltaTime() const {
 	return mDeltaTime.count() * 0.000001f;
 }

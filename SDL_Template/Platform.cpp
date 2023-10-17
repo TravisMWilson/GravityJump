@@ -10,20 +10,26 @@ Platform::Platform() {
 	mRand = Random::Instance();
 	mTimer = new Timer();
 
-	mTexture = new GLTexture("GravityJump.png", 1, 214, 192, 40);
-	mTexture->Scale(Vector2(mRand->RandomRange(0.8f, 1.2f), mRand->RandomRange(0.8f, 1.2f)));
-	mTexture->Parent(this);
-	mTexture->Position(Vec2_Zero);
-
-	mBreakupTexture = new AnimatedGLTexture("GravityJump.png", 194, 124, 233, 131, 4, 0.5f, Animation::Layouts::Horizontal);
-	mBreakupTexture->Parent(this);
-	mBreakupTexture->SetWrapMode(Animation::WrapModes::Once);
-	mBreakupTexture->Position(Vec2_Zero);
-
 	mTag = "Platform";
 	mBreaking = false;
 	mSpeed = mRand->RandomRange(50.0f, 150.0f);
 
+	mTexture = new GLTexture("GravityJump.png", 1, 214, 192, 40);
+	mTexture->Scale(Vector2(mRand->RandomRange(0.9f, 1.2f), mRand->RandomRange(0.9f, 1.2f)));
+	mTexture->Parent(this);
+	mTexture->Position(Vec2_Zero);
+
+	mBreakupTexture = new AnimatedGLTexture("GravityJump.png", 194, 124, 233, 131, 4, 0.5f);
+	mBreakupTexture->Parent(this);
+	mBreakupTexture->SetWrapMode(Animation::WrapModes::Once);
+	mBreakupTexture->Position(Vec2_Zero);
+
+	if (mRand->RandomRange(0, 8) == 0) {
+		mSpike = new Spike();
+		mSpike->Parent(this);
+		mSpike->Position(Vector2(0.0f, -40.0f));
+	}
+	
 	AddCollider(new BoxCollider(mTexture->ScaledDimensions()));
 
 	mId = PhysicsManager::Instance()->RegisterEntity(this, PhysicsManager::CollisionLayers::Platform);
@@ -37,6 +43,14 @@ Platform::~Platform() {
 
 	delete mTexture;
 	mTexture = nullptr;
+
+	delete mBreakupTexture;
+	mBreakupTexture = nullptr;
+
+	delete mSpike;
+	mSpike = nullptr;
+
+	PhysicsManager::Instance()->UnregisterEntity(mId);
 }
 
 void Platform::placePlatform() {
@@ -98,6 +112,21 @@ void Platform::Update() {
 
 	if (mBreaking) {
 		mBreakupTexture->Update();
+		
+		if (mSpike != nullptr) {
+			if (mTag == "Down") {
+				mSpike->Translate(-Vec2_Up * (mSpeed * 12) * mTimer->DeltaTime());
+			}
+			else if (mTag == "Up") {
+				mSpike->Translate(Vec2_Up * (mSpeed * 12) * mTimer->DeltaTime());
+			}
+			else if (mTag == "Left") {
+				mSpike->Translate(-Vec2_Right * (mSpeed * 12) * mTimer->DeltaTime());
+			}
+			else if (mTag == "Right") {
+				mSpike->Translate(Vec2_Right * (mSpeed * 12) * mTimer->DeltaTime());
+			}
+		}
 
 		if (!mBreakupTexture->IsAnimating()) {
 			Active(false);
@@ -111,10 +140,16 @@ void Platform::Update() {
 }
 
 void Platform::Render() {
+	if (mSpike != nullptr) {
+		mSpike->Render();
+	}
+
 	if (mBreaking) {
 		mBreakupTexture->Render();
 	}
 	else {
 		mTexture->Render();
 	}
+
+	PhysEntity::Render();
 }

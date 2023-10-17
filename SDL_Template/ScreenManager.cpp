@@ -15,6 +15,18 @@ void ScreenManager::Release() {
 	sInstance = nullptr;
 }
 
+void ScreenManager::playMusic() {
+	if (mTimer->TotalTime() > 85.0f) {
+		mMusicSelection++;
+		mAudio->PlaySFX("MUS/BackgroundMusic" + std::to_string(mMusicSelection) + ".wav", 0, 1);
+		mTimer->Reset();
+
+		if (mMusicSelection >= 9) {
+			mMusicSelection = -1;
+		}
+	}
+}
+
 void ScreenManager::processEvents() {
 	std::vector<std::string> events = mEvent->getEvents();
 
@@ -22,13 +34,18 @@ void ScreenManager::processEvents() {
 		if (events[i] == "Start") {
 			mCurrentScreen = Play;
 			mEvent->sendEvent("ActivatePlayer");
+			mEvent->sendEvent("ResetBirdTimer");
 			mEvent->removeEvent(i);
 		}
-		else if (events[i] == "GameOver") {
+		else if (events[i] == "Tutorial") {
+			mCurrentScreen = Tutorial;
+			mEvent->removeEvent(i);
+		}
+		else if (events[i] == "BackToStart") {
 			mCurrentScreen = Start;
+			mEvent->clearEvents();
 			delete mPlayScreen;
 			mPlayScreen = new PlayScreen();
-			mEvent->removeEvent(i);
 		}
 	}
 }
@@ -45,17 +62,8 @@ void ScreenManager::Update() {
 	mTimer->Update();
 
 	moveBackground();
+	//playMusic();
 	processEvents();
-
-	if (mTimer->TotalTime() > 85.0f) {
-		mMusicSelection++;
-		mAudio->PlaySFX("MUS/BackgroundMusic" + std::to_string(mMusicSelection) + ".wav", 0, 1);
-		mTimer->Reset();
-
-		if (mMusicSelection >= 9) {
-			mMusicSelection = -1;
-		}
-	}
 
 	switch (mCurrentScreen) {
 	case Start:
@@ -64,12 +72,13 @@ void ScreenManager::Update() {
 	case Play:
 		mPlayScreen->Update();
 		break;
+	case Tutorial:
+		mTutorialScreen->Update();
+		break;
 	}
 
 	Vector2 mousePosition = mInput->MousePosition();
 	mCursor->Position(mousePosition);
-
-	mTimer->Reset();
 }
 
 void ScreenManager::Render() {
@@ -81,6 +90,9 @@ void ScreenManager::Render() {
 		break;
 	case Play:
 		mPlayScreen->Render();
+		break;
+	case Tutorial:
+		mTutorialScreen->Render();
 		break;
 	}
 
@@ -95,6 +107,7 @@ ScreenManager::ScreenManager() {
 
 	mStartScreen = new StartScreen();
 	mPlayScreen = new PlayScreen();
+	mTutorialScreen = new TutorialScreen();
 
 	mCurrentScreen = Start;
 
@@ -106,7 +119,7 @@ ScreenManager::ScreenManager() {
 
 	mMusicSelection = 0;
 
-	mAudio->PlaySFX("MUS/BackgroundMusic1.wav", 0, 1);
+	//mAudio->PlaySFX("MUS/BackgroundMusic0.wav", 0, 1);
 }
 
 ScreenManager::~ScreenManager() {

@@ -4,6 +4,9 @@
 #include <string>
 #include <math.h>
 #include <ostream>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
 namespace SDLFramework {
 
@@ -196,6 +199,21 @@ namespace SDLFramework {
 		return constantSpeed;
 	}
 
+	inline Vector2 getNormalizedDirection(Vector2 from, Vector2 to) {
+		Vector2 direction;
+		direction.x = to.x - from.x;
+		direction.y = to.y - from.y;
+
+		float magnitude = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+		if (magnitude > 0.0f) {
+			direction.x /= magnitude;
+			direction.y /= magnitude;
+		}
+
+		return direction;
+	}
+
 	inline Vector2 getMoveVector(Vector2 targetPosition, Vector2 startPosition, float multiplier) {
 		Vector2 mouseToScreenMiddle = targetPosition - startPosition;
 		float distance = mouseToScreenMiddle.Magnitude();
@@ -260,6 +278,20 @@ namespace SDLFramework {
 		}
 
 		return str;
+	}
+
+	inline std::string FormatTime(float totalSeconds) {
+		int totalMilliseconds = static_cast<int>(totalSeconds * 1000);
+		int remainingMilliseconds = totalMilliseconds % (60 * 1000);
+
+		int seconds = remainingMilliseconds / 1000;
+		int milliseconds = remainingMilliseconds % 1000;
+
+		std::ostringstream formattedTime;
+		formattedTime << std::setfill('0') << std::setw(2) << seconds << "."
+			<< std::setfill('0') << std::setw(3) << milliseconds;
+
+		return formattedTime.str();
 	}
 
 	struct Vertex {

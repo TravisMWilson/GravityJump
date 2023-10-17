@@ -76,9 +76,11 @@ namespace SDLFramework {
 		mAudioManager = AudioManager::Instance();
 
 		mPhysicsManager = PhysicsManager::Instance();
-		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Player, PhysicsManager::CollisionFlags::Platform | PhysicsManager::CollisionFlags::Explosion);
+		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Player, PhysicsManager::CollisionFlags::Platform | PhysicsManager::CollisionFlags::Explosion | PhysicsManager::CollisionFlags::Bird | PhysicsManager::CollisionFlags::Spike);
 		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Platform, PhysicsManager::CollisionFlags::Player);
 		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Explosion, PhysicsManager::CollisionFlags::Player);
+		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Bird, PhysicsManager::CollisionFlags::Player);
+		mPhysicsManager->SetLayerCollisionMask(PhysicsManager::CollisionLayers::Spike, PhysicsManager::CollisionFlags::Player);
 
 		mScreenManager = ScreenManager::Instance();
 	}

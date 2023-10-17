@@ -24,6 +24,10 @@ namespace SDLFramework {
 		mEvents.erase(mEvents.begin() + index);
 	}
 
+	void EventManager::clearEvents() {
+		mEvents.clear();
+	}
+
 	std::vector<std::string> EventManager::getEvents() {
 		return mEvents;
 	}

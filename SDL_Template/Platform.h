@@ -5,6 +5,7 @@
 #include "PhysEntity.h"
 #include "GLTexture.h"
 #include "Random.h"
+#include "Spike.h"
 #include "Timer.h"
 
 using namespace SDLFramework;
@@ -16,6 +17,8 @@ private:
 
 	GLTexture* mTexture;
 	AnimatedGLTexture* mBreakupTexture;
+
+	Spike* mSpike;
 
 	bool mBreaking;
 	float mSpeed;

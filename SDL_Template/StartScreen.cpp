@@ -1,7 +1,7 @@
 #include "StartScreen.h"
 
 StartScreen::StartScreen() {
-	mAnimatedLogo = new AnimatedGLTexture("GravityJumpLogo.png", 0, 0, 615, 282, 25, 2.0f, Animation::Layouts::Horizontal);
+	mAnimatedLogo = new AnimatedGLTexture("GravityJumpLogo.png", 0, 0, 615, 282, 25, 2.0f);
 	mAnimatedLogo->Parent(this);
 	mAnimatedLogo->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.3f);
 
@@ -13,7 +13,11 @@ StartScreen::StartScreen() {
 	mStart->Parent(this);
 	mStart->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f + 35.0f);
 
-	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.7f);
+	mTutorial = new Button("Tutorial", new GLTexture("TUTORIAL", "AovelSansRounded-rdDL.ttf", 48, { 30, 30, 30 }));
+	mTutorial->Parent(this);
+	mTutorial->Position(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.55f + 100.0f);
+
+	mBottomBar = new GameEntity(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.8f);
 	mBottomBar->Parent(this);
 
 	mNamco = new GLTexture("Travis Wilson", "Copenhagen-z3Z0.ttf", 60, { 66, 109, 107 });
@@ -33,6 +37,8 @@ StartScreen::~StartScreen() {
 
 	delete mStart;
 	mStart = nullptr;
+	delete mTutorial;
+	mTutorial = nullptr;
 
 	delete mBottomBar;
 	mBottomBar = nullptr;
@@ -45,12 +51,14 @@ StartScreen::~StartScreen() {
 void StartScreen::Update() {
 	mAnimatedLogo->Update();
 	mStart->Update();
+	mTutorial->Update();
 }
 
 void StartScreen::Render() {
 	mLogoBackground->Render();
 	mAnimatedLogo->Render();
 	mStart->Render();
+	mTutorial->Render();
 	mNamco->Render();
 	mDates->Render();
 }

@@ -18,6 +18,8 @@ public:
 	~Timer();
 
 	void Reset();
+	void CompleteReset();
+
 	float DeltaTime() const;
 	float TotalTime() const;
 
