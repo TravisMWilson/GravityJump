@@ -33,6 +33,9 @@ namespace SDLFramework {
 		void Scale(Vector2 scale);
 		Vector2 Scale(Space space = World);
 
+		void ScaleToPixelHeight(Vector2 currentSize, float height);
+		void ScaleToPixelWidth(Vector2 currentSize, float width);
+
 		void Active(bool active);
 		bool Active() const;
 

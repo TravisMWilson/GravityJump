@@ -1,6 +1,7 @@
 #include "Explosion.h"
 
 Explosion::Explosion() {
+	mAudio = AudioManager::Instance();
 	mRand = Random::Instance();
 
 	mTargetTexture = new AnimatedGLTexture("Target.png", 0, 0, 736, 736, 4, 4.0f);
@@ -19,6 +20,7 @@ Explosion::Explosion() {
 }
 
 Explosion::~Explosion() {
+	mAudio = nullptr;
 	mRand = nullptr;
 
 	delete mExplosionTexture;
@@ -51,6 +53,7 @@ void Explosion::Update() {
 			mTargetTexture->Active(false);
 			mExplosionTexture->ResetAnimation();
 			mExplosionTexture->Active(true);
+			mAudio->PlaySFX("SFX/Explosion.wav", 0, 2);
 			Active(true);
 		}
 	}

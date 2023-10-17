@@ -32,6 +32,7 @@ void ScreenManager::processEvents() {
 
 	for (int i = (int)events.size() - 1; i >= 0; i--) {
 		if (events[i] == "Start") {
+			mPlayScreen = new PlayScreen();
 			mCurrentScreen = Play;
 			mEvent->sendEvent("ActivatePlayer");
 			mEvent->sendEvent("ResetBirdTimer");
@@ -45,7 +46,6 @@ void ScreenManager::processEvents() {
 			mCurrentScreen = Start;
 			mEvent->clearEvents();
 			delete mPlayScreen;
-			mPlayScreen = new PlayScreen();
 		}
 	}
 }
@@ -62,7 +62,7 @@ void ScreenManager::Update() {
 	mTimer->Update();
 
 	moveBackground();
-	//playMusic();
+	playMusic();
 	processEvents();
 
 	switch (mCurrentScreen) {
@@ -106,7 +106,7 @@ ScreenManager::ScreenManager() {
 	mTimer = new Timer();
 
 	mStartScreen = new StartScreen();
-	mPlayScreen = new PlayScreen();
+	mPlayScreen = nullptr;
 	mTutorialScreen = new TutorialScreen();
 
 	mCurrentScreen = Start;
@@ -119,7 +119,7 @@ ScreenManager::ScreenManager() {
 
 	mMusicSelection = 0;
 
-	//mAudio->PlaySFX("MUS/BackgroundMusic0.wav", 0, 1);
+	mAudio->PlaySFX("MUS/BackgroundMusic0.wav", 0, 1);
 }
 
 ScreenManager::~ScreenManager() {
@@ -130,8 +130,10 @@ ScreenManager::~ScreenManager() {
 	delete mStartScreen;
 	mStartScreen = nullptr;
 
-	delete mPlayScreen;
-	mPlayScreen = nullptr;
+	if (mPlayScreen != nullptr) {
+		delete mPlayScreen;
+		mPlayScreen = nullptr;
+	}
 
 	delete mCursor;
 	mCursor = nullptr;

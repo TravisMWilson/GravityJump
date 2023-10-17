@@ -24,6 +24,8 @@ public:
 	Button(std::string name, GLTexture* texture);
 	~Button();
 
+	Vector2 size();
+
 	void pressed();
 
 	void Update() override;

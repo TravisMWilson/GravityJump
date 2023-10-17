@@ -24,7 +24,7 @@ Platform::Platform() {
 	mBreakupTexture->SetWrapMode(Animation::WrapModes::Once);
 	mBreakupTexture->Position(Vec2_Zero);
 
-	if (mRand->RandomRange(0, 8) == 0) {
+	if (mRand->RandomRange(0, 7) == 0) {
 		mSpike = new Spike();
 		mSpike->Parent(this);
 		mSpike->Position(Vector2(0.0f, -40.0f));

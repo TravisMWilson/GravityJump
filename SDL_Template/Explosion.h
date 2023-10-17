@@ -2,6 +2,7 @@
 #define __EXPLOSION_H
 
 #include "AnimatedGLTexture.h"
+#include "AudioManager.h"
 #include "GameEntity.h"
 #include "Random.h"
 #include "Timer.h"
@@ -10,6 +11,7 @@ using namespace SDLFramework;
 
 class Explosion : public GameEntity {
 private:
+	AudioManager* mAudio;
 	Random* mRand;
 	Timer* mTimer;
 

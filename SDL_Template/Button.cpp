@@ -35,6 +35,10 @@ Button::~Button() {
 	mTexture = nullptr;
 }
 
+Vector2 Button::size() {
+	return mSize;
+}
+
 void Button::pressed() {
 	mPos = Position() - Vector2(mSize.x / 2, mSize.y /2);
 

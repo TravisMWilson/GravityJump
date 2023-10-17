@@ -78,6 +78,16 @@ namespace SDLFramework {
 		return scale;
 	}
 
+	void GameEntity::ScaleToPixelHeight(Vector2 currentSize, float height) {
+		float ratio = height / currentSize.y;
+		Scale(Vector2(ratio, ratio));
+	}
+
+	void GameEntity::ScaleToPixelWidth(Vector2 currentSize, float width) {
+		float ratio = width / currentSize.x;
+		Scale(Vector2(ratio, ratio));
+	}
+
 	void GameEntity::Active(bool active) {
 		mActive = active;
 	}
