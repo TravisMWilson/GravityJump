@@ -50,13 +50,13 @@ void Bird::move() {
 	if (Active()) {
 		if (Position().x >= Graphics::SCREEN_WIDTH - mTexture->ScaledDimensions().x) {
 			mTexture->Scale(Vector2(0.2f, 0.2f));
-			Rotation(mRand->RandomRange(-60.0f, 60.0f));
+			Rotation(mRand->RandomRange(-30.0f, 30.0f));
 			mSpeed = -mSpeed;
 			Active(false);
 		}
 		else if (Position().x <= -mTexture->ScaledDimensions().x) {
 			mTexture->Scale(Vector2(-0.2f, 0.2f));
-			Rotation(mRand->RandomRange(-60.0f, 60.0f));
+			Rotation(mRand->RandomRange(-30.0f, 30.0f));
 			mSpeed = -mSpeed;
 			Active(false);
 		}
@@ -68,20 +68,20 @@ void Bird::move() {
 		}
 	}
 
-	if (Position().y + 100 >= Graphics::SCREEN_HEIGHT + mTexture->ScaledDimensions().y) {
+	if (Position().y + 200 >= Graphics::SCREEN_HEIGHT + mTexture->ScaledDimensions().y) {
 		if (mTexture->Scale().x > 0) {
-			Rotate(1);
+			Rotate(2);
 		}
 		else {
-			Rotate(-1);
+			Rotate(-2);
 		}
 	}
-	else if (Position().y - 100 <= -mTexture->ScaledDimensions().y) {
+	else if (Position().y - 200 <= -mTexture->ScaledDimensions().y) {
 		if (mTexture->Scale().x > 0) {
-			Rotate(-1);
+			Rotate(-2);
 		}
 		else {
-			Rotate(1);
+			Rotate(2);
 		}
 	}
 }

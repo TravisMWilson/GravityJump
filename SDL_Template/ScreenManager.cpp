@@ -130,10 +130,11 @@ ScreenManager::~ScreenManager() {
 	delete mStartScreen;
 	mStartScreen = nullptr;
 
-	if (mPlayScreen != nullptr) {
+	if (mCurrentScreen == Play) {
 		delete mPlayScreen;
-		mPlayScreen = nullptr;
 	}
+
+	mPlayScreen = nullptr;
 
 	delete mCursor;
 	mCursor = nullptr;

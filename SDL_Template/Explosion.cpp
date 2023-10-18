@@ -35,7 +35,7 @@ Vector2 Explosion::scaledDimensions() {
 }
 
 void Explosion::Update() {
-	if (mRand->RandomRange(0, 100) == 0 && !mTargetTexture->Active() && !mExplosionTexture->Active()) {
+	if (mRand->RandomRange(0, 80) == 0 && !mTargetTexture->Active() && !mExplosionTexture->Active()) {
 		Position(mRand->RandomRange(0.0f, (float)Graphics::SCREEN_WIDTH), mRand->RandomRange(0.0f, (float)Graphics::SCREEN_HEIGHT));
 		mTargetTexture->Scale(Vector2(0.0f, 0.0f));
 		mTargetTexture->ResetAnimation();

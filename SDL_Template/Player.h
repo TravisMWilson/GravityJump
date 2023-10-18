@@ -51,8 +51,11 @@ public:
 
 	void resetPlayer();
 
+	void moveDirection(float direction);
+	void jump();
 	void move();
 
+	void fall(int gravity, float rotation);
 	void changeGravity();
 	int gravity();
 	void gravity(int direction);
@@ -62,6 +65,7 @@ public:
 	int hiScore();
 	void hiScore(int value);
 
+	void stand();
 	void Hit(PhysEntity* other) override;
 
 	void processEvents();

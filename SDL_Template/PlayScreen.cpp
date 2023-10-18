@@ -71,6 +71,11 @@ void PlayScreen::processEvents() {
 	for (int i = (int)events.size() - 1; i >= 0; i--) {
 		if (events[i] == "GameOver") {
 			Active(false);
+
+			if (mPlayer->score() >= mPlayer->hiScore()) {
+				mPlayer->hiScore(mPlayer->score());
+			}
+
 			mEvent->sendEvent("DisplayGameOver");
 			mEvent->removeEvent(i);
 		}
@@ -113,10 +118,6 @@ void PlayScreen::Update() {
 		}
 
 		if (!mPlayer->Active()) {
-			if (mPlayer->score() >= mPlayer->hiScore()) {
-				mPlayer->hiScore(mPlayer->score());
-			}
-
 			mEvent->sendEvent("GameOver");
 		}
 	}

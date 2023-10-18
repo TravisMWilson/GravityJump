@@ -61,7 +61,7 @@ namespace SDLFramework {
 		}
 
 		SetVolume(5, 1);
-		SetVolume(20, 2);
+		SetVolume(10, 2);
 	}
 
 	AudioManager::~AudioManager() {

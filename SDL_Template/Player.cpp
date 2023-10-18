@@ -101,113 +101,70 @@ void Player::resetPlayer() {
 	mTexture->SetSourceRect(mStaticTextures[STATIC]);
 }
 
+void Player::moveDirection(float direction) {
+	if (mCanJump) {
+		mRunAnimation->Active(true);
+	}
+
+	mRunAnimation->Scale(Vector2(direction, 1.0f));
+	mTexture->Scale(Vector2(direction, 1.0f));
+	Translate(Vector2(-direction, 0) * 500.0f * mTimer->DeltaTime());
+}
+
+void Player::jump() {
+	Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
+	mTexture->SetSourceRect(mStaticTextures[JUMPING]);
+	mRunAnimation->Active(false);
+	mCanJump = false;
+}
+
 void Player::move() {
 	if (Rotation() == mRotationalGoal) {
 		if (mInput->KeyDown(SDL_SCANCODE_W)) {
 			if (mGravity == Player::DOWN && !mJumped) {
-				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
-				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
-				mRunAnimation->Active(false);
-				mCanJump = false;
+				jump();
 			}
 			else if (mGravity == Player::LEFT) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
-				mTexture->Scale(Vector2(-1.0f, 1.0f));
-				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(-1.0f);
 			}
 			else if (mGravity == Player::RIGHT) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
-				mTexture->Scale(Vector2(1.0f, 1.0f));
-				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(1.0f);
 			}
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_S)) {
 			if (mGravity == Player::UP && !mJumped) {
-				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
-				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
-				mRunAnimation->Active(false);
-				mCanJump = false;
+				jump();
 			}
 			else if (mGravity == Player::LEFT) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
-				mTexture->Scale(Vector2(1.0f, 1.0f));
-				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(1.0f);
 			}
 			else if (mGravity == Player::RIGHT) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
-				mTexture->Scale(Vector2(-1.0f, 1.0f));
-				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(-1.0f);
 			}
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_A)) {
 			if (mGravity == Player::RIGHT && !mJumped) {
-				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
-				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
-				mRunAnimation->Active(false);
-				mCanJump = false;
+				jump();
 			}
 			else if (mGravity == Player::DOWN) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
-				mTexture->Scale(Vector2(-1.0f, 1.0f));
-				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(-1.0f);
 			}
 			else if (mGravity == Player::UP) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
-				mTexture->Scale(Vector2(1.0f, 1.0f));
-				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(1.0f);
 			}
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_D)) {
 			if (mGravity == Player::LEFT && !mJumped) {
-				Translate(Vec2_Up * 1000.0f * mTimer->DeltaTime());
-				mTexture->SetSourceRect(mStaticTextures[JUMPING]);
-				mRunAnimation->Active(false);
-				mCanJump = false;
+				jump();
 			}
 			else if (mGravity == Player::DOWN) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(1.0f, 1.0f));
-				mTexture->Scale(Vector2(1.0f, 1.0f));
-				Translate(-Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(1.0f);
 			}
 			else if (mGravity == Player::UP) {
-				if (mCanJump) {
-					mRunAnimation->Active(true);
-				}
-
-				mRunAnimation->Scale(Vector2(-1.0f, 1.0f));
-				mTexture->Scale(Vector2(-1.0f, 1.0f));
-				Translate(Vec2_Right * 500.0f * mTimer->DeltaTime());
+				moveDirection(-1.0f);
 			}
 		}
 
@@ -242,6 +199,15 @@ void Player::move() {
 	}
 }
 
+void Player::fall(int gravity, float rotation) {
+	mTexture->SetSourceRect(mStaticTextures[FALLING]);
+	mRunAnimation->Active(false);
+	mGravity = gravity;
+	mRotationalGoal = rotation;
+	mGravityTimer = 0.75f;
+	mCanSwitchGravity = false;
+}
+
 void Player::changeGravity() {
 	if (mGravityTimer > 0.0f) {
 		mGravityTimer += mTimer->DeltaTime();
@@ -257,39 +223,19 @@ void Player::changeGravity() {
 
 	if (mGravityTimer <= 0.0f && mCanSwitchGravity) {
 		if (mInput->KeyDown(SDL_SCANCODE_UP)) {
-			mTexture->SetSourceRect(mStaticTextures[FALLING]);
-			mRunAnimation->Active(false);
-			mGravity = UP;
-			mRotationalGoal = 180.0f;
-			mGravityTimer = 0.75f;
-			mCanSwitchGravity = false;
+			fall(UP, 180.0f);
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_DOWN)) {
-			mTexture->SetSourceRect(mStaticTextures[FALLING]);
-			mRunAnimation->Active(false);
-			mGravity = DOWN;
-			mRotationalGoal = 0.0f;
-			mGravityTimer = 0.75f;
-			mCanSwitchGravity = false;
+			fall(DOWN, 0.0f);
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_LEFT)) {
-			mTexture->SetSourceRect(mStaticTextures[FALLING]);
-			mRunAnimation->Active(false);
-			mGravity = LEFT;
-			mRotationalGoal = 90.0f;
-			mGravityTimer = 0.75f;
-			mCanSwitchGravity = false;
+			fall(LEFT, 90.0f);
 		}
 
 		if (mInput->KeyDown(SDL_SCANCODE_RIGHT)) {
-			mTexture->SetSourceRect(mStaticTextures[FALLING]);
-			mRunAnimation->Active(false);
-			mGravity = RIGHT;
-			mRotationalGoal = 270.0f;
-			mGravityTimer = 0.75f;
-			mCanSwitchGravity = false;
+			fall(RIGHT, 270.0f);
 		}
 	}
 }
@@ -319,41 +265,36 @@ void Player::hiScore(int level) {
 	saveData();
 }
 
+void Player::stand() {
+	mTexture->SetSourceRect(mStaticTextures[STATIC]);
+	mCanSwitchGravity = true;
+	mJumped = false;
+	mCanJump = true;
+}
+
 void Player::Hit(PhysEntity* other) {
 	if (other->tag() == "Up") {
 		if (mGravity == Player::UP && Position().y - (mTexture->ScaledDimensions().y / 2) >= (other->Position().y - 40.0f)) {
 			Position(Position() - Vector2(0.0f, (Position().y - (mTexture->ScaledDimensions().y / 2)) - (other->Position().y + 10.0f)));
-			mTexture->SetSourceRect(mStaticTextures[STATIC]);
-			mCanSwitchGravity = true;
-			mJumped = false;
-			mCanJump = true;
+			stand();
 		}
 	}
 	else if (other->tag() == "Down") {
 		if (mGravity == Player::DOWN && Position().y + (mTexture->ScaledDimensions().y / 2) <= (other->Position().y + 40.0f)) {
 			Position(Position() - Vector2(0.0f, (Position().y + (mTexture->ScaledDimensions().y / 2)) - (other->Position().y - 10.0f)));
-			mTexture->SetSourceRect(mStaticTextures[STATIC]);
-			mCanSwitchGravity = true;
-			mJumped = false;
-			mCanJump = true;
+			stand();
 		}
 	}
 	else if (other->tag() == "Left") {
 		if (mGravity == Player::LEFT && Position().x - (mTexture->ScaledDimensions().y / 2) >= (other->Position().x - 40.0f)) {
 			Position(Position() - Vector2((Position().x - (mTexture->ScaledDimensions().y / 2)) - (other->Position().x + 10.0f), 0.0f));
-			mTexture->SetSourceRect(mStaticTextures[STATIC]);
-			mCanSwitchGravity = true;
-			mJumped = false;
-			mCanJump = true;
+			stand();
 		}
 	}
 	else if (other->tag() == "Right") {
 		if (mGravity == Player::RIGHT && Position().x + (mTexture->ScaledDimensions().y / 2) <= (other->Position().x + 40.0f)) {
 			Position(Position() - Vector2((Position().x + (mTexture->ScaledDimensions().y / 2)) - (other->Position().x - 10.0f), 0.0f));
-			mTexture->SetSourceRect(mStaticTextures[STATIC]);
-			mCanSwitchGravity = true;
-			mJumped = false;
-			mCanJump = true;
+			stand();
 		}
 	}
 	else if (other->tag() == "Spike") {
