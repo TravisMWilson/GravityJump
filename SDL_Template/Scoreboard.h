@@ -17,9 +17,12 @@ private:
 	const int FONT_SIZE = 40;
 	const float FONT_SPACING = 23.0f;
 
+	GLTexture* mTexture;
+
 	std::vector<GLTexture*> mScore;
 	std::string mCurrentScore;
 	int mScoreValue;
+
 	SDL_Color mColor;
 	Vector2 mSize;
 

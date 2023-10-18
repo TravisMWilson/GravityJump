@@ -9,6 +9,10 @@ Scoreboard::Scoreboard(SDL_Color color) {
 	mColor = color;
 	mCurrentScore = "0";
 
+	mTexture = new GLTexture("ScoreboardBackground.png");
+	mTexture->Parent(this);
+	mTexture->Position(Vec2_Zero);
+
 	Score(0);
 }
 
@@ -44,6 +48,8 @@ void Scoreboard::Score(std::string str, int placement) {
 		}
 
 		mSize = Vector2(20.0f * (lastIndex + 1), 23.0f);
+
+		mTexture->ScaleToPixelSize(mTexture->ScaledDimensions(), mSize);
 	}
 }
 
@@ -59,6 +65,8 @@ void Scoreboard::Render() {
 	for (auto digit : mScore) {
 		digit->Render();
 	}
+
+	mTexture->Render();
 }
 
 void Scoreboard::ClearBoard() {
