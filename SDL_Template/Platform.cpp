@@ -115,16 +115,16 @@ void Platform::Update() {
 		
 		if (mSpike != nullptr) {
 			if (mTag == "Down") {
-				mSpike->Translate(-Vec2_Up * (mSpeed * 12) * mTimer->DeltaTime());
+				mSpike->Translate(-Vec2_Up * (mSpeed * 10) * mTimer->DeltaTime());
 			}
 			else if (mTag == "Up") {
-				mSpike->Translate(Vec2_Up * (mSpeed * 12) * mTimer->DeltaTime());
+				mSpike->Translate(Vec2_Up * (mSpeed * 10) * mTimer->DeltaTime());
 			}
 			else if (mTag == "Left") {
-				mSpike->Translate(-Vec2_Right * (mSpeed * 12) * mTimer->DeltaTime());
+				mSpike->Translate(-Vec2_Right * (mSpeed * 10) * mTimer->DeltaTime());
 			}
 			else if (mTag == "Right") {
-				mSpike->Translate(Vec2_Right * (mSpeed * 12) * mTimer->DeltaTime());
+				mSpike->Translate(Vec2_Right * (mSpeed * 10) * mTimer->DeltaTime());
 			}
 		}
 
