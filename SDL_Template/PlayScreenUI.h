@@ -21,11 +21,15 @@ private:
 
 	GameEntity* mDisplay;
 	Scoreboard* mDisplayHiScore;
+	GLTexture* mDisplayHiScoreBackground;
 	Scoreboard* mDisplayScore;
+	GLTexture* mDisplayScoreBackground;
 
 	GameEntity* mGameOverDisplay;
 	Scoreboard* mGameOverHiScore;
+	GLTexture* mGameOverHiScoreBackground;
 	Scoreboard* mGameOverScore;
+	GLTexture* mGameOverScoreBackground;
 	GLTexture* mGameOverMessage;
 	bool mGameOver;
 

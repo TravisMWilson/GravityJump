@@ -14,9 +14,17 @@ PlayScreenUI::PlayScreenUI() {
 	mDisplayHiScore->Parent(mDisplay);
 	mDisplayHiScore->Position(Vec2_Zero);
 
+	mDisplayHiScoreBackground = new GLTexture("ScoreBackground.png");
+	mDisplayHiScoreBackground->Parent(mDisplay);
+	mDisplayHiScoreBackground->Position(Vec2_Zero);
+
 	mDisplayScore = new Scoreboard({ 255, 0, 0 });
 	mDisplayScore->Parent(mDisplay);
 	mDisplayScore->Position(Vector2(0.0f, 35.0f));
+
+	mDisplayScoreBackground = new GLTexture("ScoreBackground.png");
+	mDisplayScoreBackground->Parent(mDisplay);
+	mDisplayScoreBackground->Position(Vector2(0.0f, 35.0f));
 
 	mGameOverDisplay = new GameEntity();
 	mGameOverDisplay->Position(Vector2(Graphics::SCREEN_WIDTH * 0.5f, Graphics::SCREEN_HEIGHT * 0.5f));
@@ -29,9 +37,17 @@ PlayScreenUI::PlayScreenUI() {
 	mGameOverHiScore->Parent(mGameOverDisplay);
 	mGameOverHiScore->Position(Vector2(0.0f, 50.0f));
 
+	mGameOverHiScoreBackground = new GLTexture("ScoreBackground.png");
+	mGameOverHiScoreBackground->Parent(mGameOverDisplay);
+	mGameOverHiScoreBackground->Position(Vector2(0.0f, 50.0f));
+
 	mGameOverScore = new Scoreboard({ 255, 0, 0 });
 	mGameOverScore->Parent(mGameOverDisplay);
 	mGameOverScore->Position(Vector2(0.0f, 100.0f));
+
+	mGameOverScoreBackground = new GLTexture("ScoreBackground.png");
+	mGameOverScoreBackground->Parent(mGameOverDisplay);
+	mGameOverScoreBackground->Position(Vector2(0.0f, 100.0f));
 }
 
 PlayScreenUI::~PlayScreenUI() {
@@ -45,8 +61,12 @@ PlayScreenUI::~PlayScreenUI() {
 	mDisplay = nullptr;
 	delete mDisplayHiScore;
 	mDisplayHiScore = nullptr;
+	delete mDisplayHiScoreBackground;
+	mDisplayHiScoreBackground = nullptr;
 	delete mDisplayScore;
 	mDisplayScore = nullptr;
+	delete mDisplayScoreBackground;
+	mDisplayScoreBackground = nullptr;
 
 	delete mGameOverDisplay;
 	mGameOverDisplay = nullptr;
@@ -54,8 +74,12 @@ PlayScreenUI::~PlayScreenUI() {
 	mGameOverMessage = nullptr;
 	delete mGameOverHiScore;
 	mGameOverHiScore = nullptr;
+	delete mGameOverHiScoreBackground;
+	mGameOverHiScoreBackground = nullptr;
 	delete mGameOverScore;
 	mGameOverScore = nullptr;
+	delete mGameOverScoreBackground;
+	mGameOverScoreBackground = nullptr;
 }
 
 void PlayScreenUI::processEvents() {
@@ -94,11 +118,15 @@ void PlayScreenUI::Update() {
 
 void PlayScreenUI::Render() {
 	if (mGameOver) {
+		mGameOverHiScoreBackground->Render();
+		mGameOverScoreBackground->Render();
 		mGameOverMessage->Render();
 		mGameOverHiScore->Render();
 		mGameOverScore->Render();
 	}
 	else {
+		mDisplayHiScoreBackground->Render();
+		mDisplayScoreBackground->Render();
 		mDisplayHiScore->Render();
 		mDisplayScore->Render();
 	}
